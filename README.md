@@ -24,17 +24,16 @@ Create an initializer an call `Cangrejo.config`
 
 ```ruby
 Cangrejo.config do |config|
-  config.username = ""
-  config.password = ""
-  config.cache_dir = '/tmp/crawler_cache'
-  config.
+  set_username = ""
+  set_password = ""
+  set_crawler_cache_path '/tmp/crawler_cache'
 
-  if Env.development?
+  if Rails.env.development?
     # Override crawler configurations
     crawler 'some_crawler', {
-      location: '/path/to/crawler',
-      repository: 'git://crawler/repo',
-      commit: 'ThEcr4wl3rc0m1ty0un33d'
+      path: '/path/to/crawler',
+      git_remote: 'git://crawler/repo',
+      git_commit: 'ThEcr4wl3rc0m1ty0un33d'
     }
   end
 end
