@@ -1,11 +1,7 @@
 require "ostruct"
-require "cangrejo/modes/remote"
-require "cangrejo/modes/git"
-require "cangrejo/modes/local"
 
 module Cangrejo
   class Session
-    include Forwardable
 
     attr_reader :doc
 
@@ -50,10 +46,13 @@ module Cangrejo
 
     def select_mode(_options)
       @mode = if _options.has_key? :path
+        require "cangrejo/modes/local"
         Modes::Local.new _options[:path]
       elsif _options.has_key? :git_remote
+        require "cangrejo/modes/git"
         Modes::Git.new _options[:git_remote], _options[:git_commit], _options[:relative_path], @name
       else
+        require "cangrejo/modes/remote"
         Modes::Remote.new @name
       end
     end
