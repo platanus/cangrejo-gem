@@ -16,7 +16,7 @@ module Cangrejo
       end
 
       def release
-        @launcher.kill
+        @launcher.kill unless @launcher.nil?
       end
 
     private
