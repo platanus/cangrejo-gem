@@ -1,3 +1,5 @@
+require 'net/http'
+
 module Net
   #  Overrides the connect method to simply connect to a unix domain socket.
   class SocketHttp < HTTP
