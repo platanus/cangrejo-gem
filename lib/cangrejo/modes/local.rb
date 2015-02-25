@@ -22,8 +22,12 @@ module Cangrejo
     private
 
       def init_launcher
-        @launcher = Support::Launcher.new @path
+        @launcher = Support::Launcher.new @path, launcher_options
         @launcher.launch
+      end
+
+      def launcher_options
+        ['--no-reload']
       end
 
       def init_rest_client

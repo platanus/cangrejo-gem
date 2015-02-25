@@ -2,8 +2,9 @@ module Cangrejo
   module Support
     class Launcher
 
-      def initialize(_path)
+      def initialize(_path, _options=nil)
         @path = _path
+        @options = _options || []
         select_socket_file
       end
 
@@ -14,7 +15,7 @@ module Cangrejo
       def launch
         gem_path = File.join(@path, 'Gemfile')
         # TODO: for some reason, the gemfile path must be specified here, maybe because of rbenv?
-        @pid = Process.spawn({ 'BUNDLE_GEMFILE' => gem_path }, "bin/crabfarm s --host #{host} --no-reload", chdir: @path)
+        @pid = Process.spawn({ 'BUNDLE_GEMFILE' => gem_path }, "bin/crabfarm s --host=#{host} #{@options.join(' ')}", chdir: @path)
         wait_for_socket
       end
 
