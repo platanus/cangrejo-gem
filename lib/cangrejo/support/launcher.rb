@@ -22,7 +22,7 @@ module Cangrejo
       def kill
         unless @pid.nil?
           Process.kill 'INT', @pid
-          Process.wait @pid
+          Process.wait @pid, Process::WNOHANG
         end
       end
 
