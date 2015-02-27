@@ -1,6 +1,10 @@
+require 'timeout'
+
 module Cangrejo
   module Support
     class Launcher
+
+      KILL_TIMEOUT = 5.0
 
       def initialize(_path, _options=nil)
         @path = _path
@@ -20,10 +24,7 @@ module Cangrejo
       end
 
       def kill
-        unless @pid.nil?
-          Process.kill 'INT', @pid
-          Process.wait @pid, Process::WNOHANG
-        end
+        safe_kill @pid unless @pid.nil?
       end
 
     private
@@ -39,6 +40,19 @@ module Cangrejo
       def wait_for_socket
         sleep 0.1 while not File.exist? @socket_file
       end
+
+      def safe_kill _pid
+        begin
+          Timeout.timeout(KILL_TIMEOUT) do
+            Process.kill 'INT', _pid
+            Process.wait _pid
+          end
+        rescue Timeout::Error
+          Process.kill 9, _pid
+          Process.wait _pid # prevent zombies!
+        end
+      end
+
     end
   end
 end
