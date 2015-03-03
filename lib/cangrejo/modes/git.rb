@@ -39,6 +39,10 @@ module Cangrejo
         File.join cache_path, @name
       end
 
+      def gemfile_path
+        File.join(deploy_path, 'Gemfile')
+      end
+
       def ensure_repo_clone
         unless File.exists? File.join(repo_path, '.git')
           ::Git.clone(@url, @name, :path => cache_path)
@@ -56,7 +60,7 @@ module Cangrejo
       end
 
       def ensure_deps
-        %x[cd '#{deploy_path}' && bundle install] if @needs_bundle
+        system({ 'BUNDLE_GEMFILE' => gemfile_path }, 'bundle install', chdir: deploy_path) if @needs_bundle
         @needs_bundle = false
       end
     end
