@@ -21,7 +21,7 @@ module Cangrejo
     private
 
       def prepare_resource(_path)
-        RestClient::JsonResource.new URI.join(remote_host, _path)
+        RestClient::JsonResource.new URI.join(remote_host, _path).to_s
       end
 
       def remote_host
