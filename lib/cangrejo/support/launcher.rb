@@ -4,7 +4,14 @@ module Cangrejo
   module Support
     class Launcher
 
-      KILL_TIMEOUT = 5.0
+      class LaunchTimeout < Cangrejo::Error
+        def initialize(_msg)
+          super "Timed out trying to start crawler"
+        end
+      end
+
+      SPAWN_TIMEOUT = 5
+      KILL_TIMEOUT = 5
 
       def initialize(_path, _options=nil)
         @path = _path
@@ -38,7 +45,10 @@ module Cangrejo
       end
 
       def wait_for_socket
-        sleep 0.1 while not File.exist? @socket_file
+        Timeout::timeout(SPAWN_TIMEOUT, LaunchTimeout) do
+          # TODO: detect if the process crashes before timeout
+          sleep 0.1 while not File.exist? @socket_file
+        end
       end
 
       def safe_kill _pid
