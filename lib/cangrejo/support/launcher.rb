@@ -26,7 +26,7 @@ module Cangrejo
       def launch
         gem_path = File.join(@path, 'Gemfile')
         # TODO: for some reason, the gemfile path must be specified here, maybe because of rbenv?
-        @pid = Process.spawn({ 'BUNDLE_GEMFILE' => gem_path }, "bin/crabfarm s --host=#{host} #{@options.join(' ')}", chdir: @path)
+        @pid = Process.spawn({ 'BUNDLE_GEMFILE' => gem_path }, "bin/crabfarm s --host=#{host} #{@options.join(' ')}", chdir: @path, pgroup: true)
         wait_for_socket
       end
 
@@ -54,12 +54,12 @@ module Cangrejo
       def safe_kill _pid
         begin
           Timeout.timeout(KILL_TIMEOUT) do
-            Process.kill 'INT', _pid
+            Process.kill "INT", _pid
             Process.wait _pid
           end
         rescue Timeout::Error
-          Process.kill 9, _pid
-          Process.wait _pid # prevent zombies!
+          Process.kill -9, _pid # kill entire process group
+          Process.wait _pid
         end
       end
 
