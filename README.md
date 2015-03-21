@@ -22,14 +22,12 @@ Or install it yourself as:
 
 ```ruby
 Cangrejo.configure do |config|
-  config.set_username = "" # only if you intend to use the crabfarm.io service
-  config.set_password = "" # only if you intend to use the crabfarm.io service
   config.set_crawler_cache_path 'tmp' # make sure this path exists!
   config.set_temp_path '/tmp/crawler_cache' # make sure this path exists!
 
   if Rails.env.development?
     # Override crawler configurations, more on this later
-    config.crawler 'some_crawler', {
+    config.set_crawler_setup_for 'platanus/some-crawler', {
       path: '/path/to/crawler',
       git_remote: 'git://crawler/repo',
       git_commit: 'ThEcr4wl3rc0m1ty0un33d'
@@ -52,20 +50,20 @@ end
 
 There are three ways to run a crawler:
 
-By default, crawlers are ran in the **Crabfarm.io cloud**. To do so you will need to create an account and register the crawler repo.
+By default, crawlers are identified by their unique uri (like `platanus/demo`)and ran in the **Crabfarm.io cloud**. To do so you will need to create an account and register the crawler repo.
 
-Crawlers can also be run from a local repository:
+Crawlers can also be run from a local repository, just map the crawler uri to a path in the initializer:
 
 ```ruby
-config.crawler 'some_crawler', {
+config.set_crawler_setup_for 'org/repo', {
   path: '/path/to/crawler'
 }
 ```
 
-Or from a git remote, the crawler is downloaded to the path specified using `config.set_crawler_cache_path` and then ran locally:
+Crawlers can also be ran from a git remote, the crawler is downloaded to the path specified using `config.set_crawler_cache_path` and then ran locally:
 
 ```ruby
-config.crawler 'some_crawler', {
+config.set_crawler_setup_for 'org/repo', {
   git_remote: 'git://crawler/repo',
   git_commit: 'ThEcr4wl3rc0m1ty0un33d'
 }
@@ -73,19 +71,17 @@ config.crawler 'some_crawler', {
 
 ### Sessions
 
-Then load a crawler session, set `hold: true` to start it manually. Same options available in config are available during initialization.
+To communicate with crawlers you use crawling sessions. event though you can manually build and start a session, it is recommended to use the `Cangrejo.connect` method to handle session lifecycle for you:
 
 ```ruby
-session = Cangrejo::Session.new 'some_crawler', hold: true
+Cangrejo.connect 'org/repo' do |session|
+  session.crawl(:front_page, param1: 'hello')
+end
 ```
 
-Start it to deploy and start the crawler.
+You can also call connect **with no crawler name**, if so, connect will use the crawler that was registered first in the configuration.
 
-```ruby
-session.start
-```
-
-Change its state to crawl
+Once inside a connect block, you can change the session state using `crawl`
 
 ```ruby
 session.crawl(:front_page, param1: 'hello')
@@ -98,13 +94,15 @@ session.doc.title
 session.doc.price
 ```
 
-Don't forget to release the session when you are done!! Once released the session becomes unusable.
+You can also create, start and stop sessions manually;
 
 ```ruby
-session.release
+session = Cangrejo::Session.new 'org/repo'
+session.crawl(:front_page, param1: 'hello')
+session.relase
 ```
 
-TODO: Write usage instructions here
+Don't forget to release the session when you are done!! Once released the session becomes unusable.
 
 ## Contributing
 

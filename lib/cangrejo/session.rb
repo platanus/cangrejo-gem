@@ -1,3 +1,4 @@
+require 'date'
 require "ostruct"
 
 module Cangrejo
@@ -7,11 +8,30 @@ module Cangrejo
 
     attr_reader :doc, :state_name, :state_params
 
-    def initialize(_name, _options={})
-      @name = _name
-      options = Cangrejo.config.crawlers.fetch(_name, {}).merge _options
+    def self.connect _name_or_config
+      session = Session.new _name_or_config
+      begin
+        session.start
+        yield session
+      ensure
+        session.release
+      end
+    end
+
+    def initialize(_name_or_config)
+      options = if _name_or_config.is_a? Hash
+        @name = nil
+        _name_or_config
+      else
+        @name = _name_or_config
+        Cangrejo.config.crawlers.fetch(_name, {})
+      end
+
       select_mode options
-      start unless _options.fetch :hold, Cangrejo.config.hold_by_default
+    end
+
+    def started?
+      not @rest.nil?
     end
 
     def start
@@ -45,6 +65,7 @@ module Cangrejo
 
     def release
       @mode.release
+      @rest = nil
       self
     end
 
@@ -82,7 +103,7 @@ module Cangrejo
         Modes::Git.new _options[:git_remote], _options[:git_commit], _options[:relative_path], @name
       else
         require "cangrejo/modes/remote"
-        Modes::Remote.new @name
+        Modes::Remote.new _options.fetch(:remote, @name)
       end
     end
 

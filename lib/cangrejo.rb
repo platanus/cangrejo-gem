@@ -9,7 +9,6 @@ module Cangrejo
     crabfarm_host: 'http://api.crabfarm.io',
     crawler_cache_path: 'tmp/crawler_cache',
     temp_path: 'tmp',
-    hold_by_default: false,
     crawlers: Hash.new
   })
 
@@ -20,4 +19,10 @@ module Cangrejo
   def self.configure
     yield Configurator.new @@config
   end
+
+  def self.connect _name_or_config=nil, &_block
+    _name_or_config = config[:crawlers].values.first if _name_or_config.nil?
+    Session.connect _name_or_config, &_block
+  end
+
 end

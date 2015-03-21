@@ -4,8 +4,7 @@ module Cangrejo
     [
       :crabfarm_host,
       :crawler_cache_path,
-      :temp_path,
-      :hold_by_default
+      :temp_path
     ]
     .each do |name|
       define_method "set_#{name}" do |value|
@@ -17,7 +16,11 @@ module Cangrejo
       @config = _config
     end
 
-    def crawler(_name, _options)
+    def set_crawler_setup(_options)
+      @config.crawlers[nil] = _options
+    end
+
+    def set_crawler_setup_for(_name, _options)
       @config.crawlers[_name] = _options
     end
 
