@@ -4,21 +4,29 @@ module Cangrejo
   module Modes
     class Remote
 
-      def initialize(_name)
-        @name = _name
+      def initialize(_remote)
+        @remote = _remote
       end
 
       def setup
-        sessions = prepare_resource "api/crawlers/#{@name}/sessions"
-        sessions.post({}.to_json)
-        return prepare_resource "api/sessions/#{sessions.id}"
+        @session = create_session
       end
 
       def release
-        # nothing
+        @session.put({ status: 'finished' }) unless @session.nil?
+        @session = nil
       end
 
     private
+
+      def session_collection
+        @collection ||= prepare_resource "api/bots/#{@remote}/sessions"
+      end
+
+      def create_session
+        new_session_id = session_collection.post({}.to_json).id
+        prepare_resource "api/sessions/#{new_session_id}"
+      end
 
       def prepare_resource(_path)
         RestClient::JsonResource.new URI.join(remote_host, _path).to_s
