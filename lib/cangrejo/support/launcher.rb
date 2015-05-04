@@ -68,7 +68,9 @@ module Cangrejo
           # Kill the entire process group to make sure childs aren't left hanging around
           Process.kill(-9, _pid)
           Process.wait _pid
-        rescue nil end
+        rescue
+          nil
+        end
       end
 
     end
