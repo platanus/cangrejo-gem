@@ -58,7 +58,9 @@ module Cangrejo
             Process.wait _pid
           end
         rescue Timeout::Error
-          Process.kill -9, _pid # kill entire process group
+        ensure
+          # Kill the entire process group to make sure childs aren't left hanging around
+          Process.kill -9, _pid
           Process.wait _pid
         end
       end
