@@ -24,7 +24,7 @@ module Cangrejo
         _name_or_config
       else
         @name = _name_or_config
-        Cangrejo.config.crawlers.fetch(_name, {})
+        Cangrejo.config.crawlers.fetch(_name_or_config, {})
       end
 
       select_mode options
