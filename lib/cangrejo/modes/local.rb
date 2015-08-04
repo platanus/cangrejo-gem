@@ -22,11 +22,15 @@ module Cangrejo
     private
 
       def init_launcher
-        @launcher = Support::Launcher.new @path, launcher_options
+        @launcher = Support::Launcher.new @path, timeout: launch_timeout, argv: launch_cmd_arguments
         @launcher.launch
       end
 
-      def launcher_options
+      def launch_timeout
+        5.0
+      end
+
+      def launch_cmd_arguments
         ['--no-reload']
       end
 

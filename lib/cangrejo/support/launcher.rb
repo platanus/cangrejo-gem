@@ -13,9 +13,10 @@ module Cangrejo
       SPAWN_TIMEOUT = 5
       KILL_TIMEOUT = 5
 
-      def initialize(_path, _options=nil)
+      def initialize(_path, _options={})
         @path = _path
-        @options = _options || []
+        @timeout = _options.fetch(:timeout, SPAWN_TIMEOUT)
+        @argv = _options.fetch(:argv, [])
         select_socket_file
       end
 
@@ -26,7 +27,7 @@ module Cangrejo
       def launch
         gem_path = File.join(@path, 'Gemfile')
         # TODO: for some reason, the gemfile path must be specified here, maybe because of rbenv?
-        @pid = Process.spawn({ 'BUNDLE_GEMFILE' => gem_path }, "bin/crabfarm s --host=#{host} #{@options.join(' ')}", chdir: @path, pgroup: true)
+        @pid = Process.spawn({ 'BUNDLE_GEMFILE' => gem_path }, "bin/crabfarm s --host=#{host} #{@argv.join(' ')}", chdir: @path, pgroup: true)
         wait_for_socket
       end
 
@@ -45,7 +46,7 @@ module Cangrejo
       end
 
       def wait_for_socket
-        Timeout::timeout(SPAWN_TIMEOUT, LaunchTimeout) do
+        Timeout::timeout(@timeout, LaunchTimeout) do
           # TODO: detect if the process crashes before timeout
           sleep 0.1 while not File.exist? @socket_file
         end
