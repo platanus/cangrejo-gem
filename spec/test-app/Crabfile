@@ -1,0 +1,75 @@
+# The selected browser engine for navigators to be used throughout the crawler
+# Other options (may require instalation of additional libraries): :phantomjs, :remote, :chrome, :firefox
+set_browser :phantomjs
+
+# The default parser engine for reducers that do not specify one.
+# Available options are :pincers, :nokogiri and :pdf_parser. :pdf_parser requires an additional gem to be added to Gemfile
+set_parser :pincers
+
+# The path where every crawler log is stored.
+# set_log_path 'logs'
+
+# Set crawler proxy, this setting is overrided when running the crawler in crabfarm.io
+# set_proxy 'the.proxy.address'
+
+# General webdriver configuration
+########################################
+
+# The following parameters only apply if using a webdriver based driver
+
+# Selects the webdriver wrapper library to be used, options are :pincers, :watir and :capybara.
+# Both watir and capybara require an additional gem to be added to Gemfile
+set_webdriver_dsl :pincers
+
+# Set the selected webdriver capabilities (check the driver documentation for more details)
+# set_webdriver_capabilities
+
+# Set the browser window width
+# set_webdriver_window_width 1280
+
+# Set the browser window height
+# set_webdriver_window_height 800
+
+# Phantom launcher configuration
+########################################
+
+# The following parameters only apply if using the :phantomjs webdriver
+
+# Make phantom load images when requesting documents
+# set_phantom_load_images true
+
+# Set phantom log level, defaults to warning
+# set_phantom_log_level :warn
+
+# Set phantom ssl mode, defaults to :any, posible options are sslv3, sslv2, tlsv1 or any
+# set_phantom_ssl 'any'
+
+# Set phantomjs executable location, by default crabfarm expects phantomjs to be included in enviroment
+# set_phantom_bin_path 'phantomjs'
+
+
+# Remote driver options
+########################################
+
+# The following parameters only apply if using the :remote webdriver
+
+# Remote driver host
+# set_webdriver_host www.myseleniumgrid.com
+
+# Remote driver port
+# set_webdriver_port 8080
+
+# Remote driver response timeout, in seconds
+# set_webdriver_remote_timeout 120
+
+
+# Recording configuration
+########################################
+
+# The following parameters only apply when recording or replaying mementos
+
+# Set the crabtrap executable location, by default crabfarm expects crabtrap to be included in enviroment
+# set_crabtrap_bin_path 'crabtrap'
+
+# Change the browser used for the recording command, available options are 'firefox' or 'chrome'
+# set_recorder_driver :firefox
