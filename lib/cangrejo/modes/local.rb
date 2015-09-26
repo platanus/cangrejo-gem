@@ -85,6 +85,9 @@ module Cangrejo
       end
 
       def host
+        # TODO: add posibility to use ports instead of unix sockets, it would also
+        # be nice to have a mechanism where the loaded process reports the port it
+        # binded to.
         "unix://#{@socket_file}"
       end
 
