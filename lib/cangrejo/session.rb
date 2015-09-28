@@ -53,15 +53,21 @@ module Cangrejo
 
       params = add_timestamp(_params)
 
-      while_times_out do
-        @rest.put(name: _state, params: params, wait: WAIT_STEP)
-        @state_name = _state
-        @state_params = _params
+      begin
+        while_times_out do
+          @rest.put(name: _state, params: params, wait: WAIT_STEP)
+          @state_name = _state
+          @state_params = _params
+        end
+      rescue RestClient::InternalServerError => exc
+        raise unwrap_packed_exception exc
       end
 
       wrap_response_doc
       self
     end
+
+    alias :navigate :crawl
 
     def release
       @mode.release
@@ -104,6 +110,15 @@ module Cangrejo
       else
         require "cangrejo/modes/remote"
         Modes::Remote.new _options.fetch(:remote, @name)
+      end
+    end
+
+    def unwrap_packed_exception(_exc)
+      begin
+        data = JSON.parse _exc.http_body
+        Cangrejo::CrawlerError.new data['exception'], data['backtrace']
+      rescue
+        _exc
       end
     end
 

@@ -88,4 +88,29 @@ describe Cangrejo::Session do
 
   end
 
+  context "when interacting with a real crawler" do
+
+    let!(:session) { Cangrejo::Session.new path: TEST_APP_PATH }
+
+    before { session.start }
+    after { session.release }
+
+    describe "crawl" do
+
+      it "should unpack crawlers exceptions" do
+        crawler_exc = begin
+          session.crawl(:repeater, raise: 'some message', backtrace: ['some','backtrace'])
+        rescue Exception => exc
+          exc
+        end
+
+        expect(crawler_exc).to be_a(Cangrejo::CrawlerError)
+        expect(crawler_exc.message).to eq('some message')
+        expect(crawler_exc.backtrace).to start_with(['some','backtrace'])
+      end
+
+    end
+
+  end
+
 end

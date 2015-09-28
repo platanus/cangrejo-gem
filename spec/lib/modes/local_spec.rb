@@ -3,10 +3,6 @@ require "sys/proctable"
 
 describe Cangrejo::Modes::Local do
 
-  before {
-    Cangrejo.config.temp_path = TEMP_PATH
-  }
-
   let!(:srv) { described_class.new TEST_APP_PATH }
   after(:example) { srv.release }
 
@@ -21,7 +17,7 @@ describe Cangrejo::Modes::Local do
     it "should return a rest client instance connected to the crawler" do
       session = srv.setup
       expect(session).to be_a RestClient::JsonResource
-      expect(session.put(name: :test).name).to eq 'test'
+      expect(session.put(name: :repeater).name).to eq 'repeater'
     end
 
   end
