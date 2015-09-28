@@ -105,7 +105,7 @@ describe Cangrejo::Session do
         end
 
         expect(crawler_exc).to be_a(Cangrejo::CrawlerError)
-        expect(crawler_exc.message).to eq('some message')
+        expect(crawler_exc.message).to eq('some message (StandardError)')
         expect(crawler_exc.backtrace).to start_with(['some','backtrace'])
       end
 
