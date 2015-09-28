@@ -14,13 +14,16 @@ module Cangrejo
 
       def setup
         select_socket_file
-        start_process
+
+        @process = prepare_process
+        start_process @process
+
         wait_for_socket
         init_rest_client
       end
 
       def release
-        process.stop unless process.nil?
+        stop_process(@process) unless @process.nil?
       end
 
     private
@@ -41,11 +44,6 @@ module Cangrejo
         5.0
       end
 
-      def start_process
-        @process = prepare_process
-        @process.start
-      end
-
       def prepare_process
         cmd = [ "bin/crabfarm", "s", "--host=#{host}" ]
         cmd += cmd_arguments
@@ -59,6 +57,14 @@ module Cangrejo
         cp.io.inherit!
 
         return cp
+      end
+
+      def start_process(_process)
+        _process.start
+      end
+
+      def stop_process(_process)
+        _process.stop
       end
 
       def wait_for_socket
