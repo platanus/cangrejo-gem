@@ -75,19 +75,19 @@ To communicate with crawlers you use crawling sessions. event though you can man
 
 ```ruby
 Cangrejo.connect 'org/repo' do |session|
-  session.crawl(:front_page, param1: 'hello')
+  session.navigate(:front_page, param1: 'hello')
 end
 ```
 
 You can also call connect **with no crawler name**, if so, connect will use the crawler that was registered first in the configuration.
 
-Once inside a connect block, you can change the session state using `crawl`
+Once inside a connect block, you can change the session state using `navigate`
 
 ```ruby
-session.crawl(:front_page, param1: 'hello')
+session.navigate(:front_page, param1: 'hello')
 ```
 
-Data extracted by last crawl is available at `doc` property as an open struct
+Data extracted by last navigation is available at `doc` property as an open struct
 
 ```ruby
 session.doc.title
@@ -98,7 +98,7 @@ You can also create, start and stop sessions manually;
 
 ```ruby
 session = Cangrejo::Session.new 'org/repo'
-session.crawl(:front_page, param1: 'hello')
+session.navigate(:front_page, param1: 'hello')
 session.relase
 ```
 
