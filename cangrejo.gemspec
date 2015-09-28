@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ignacio Baixas"]
   spec.email         = ["ignacio@platan.us"]
   spec.summary       = %q{Crabfarm client for ruby}
-  spec.homepage      = ""
+  spec.description   = %q{Cangrejo lets you consume crabfarm crawlers using a simple DSL}
+  spec.homepage      = "https://github.com/platanus/cangrejo-gem"
   spec.license       = "MIT"
 
   spec.files         = Dir['lib/**/*.rb']
