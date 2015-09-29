@@ -6,7 +6,7 @@ require "cangrejo/session"
 module Cangrejo
 
   @@config = OpenStruct.new({
-    crabfarm_host: 'http://api.crabfarm.io',
+    crabfarm_host: 'https://grid.crabfarm.io',
     crawler_cache_path: 'tmp/crawler_cache',
     temp_path: 'tmp',
     crawlers: Hash.new
