@@ -48,8 +48,6 @@ module Cangrejo
         cmd = [ "bin/crabfarm", "s", "--host=#{host}" ]
         cmd += cmd_arguments
 
-        puts cmd.join(' ')
-
         cp = ChildProcess.build(*cmd)
         cp.environment.merge! cmd_enviroment
         cp.cwd = @path
