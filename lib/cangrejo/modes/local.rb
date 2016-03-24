@@ -23,7 +23,7 @@ module Cangrejo
       end
 
       def release
-        stop_process(@process) unless @process.nil?
+        stop_process(@process) if !@process.nil? && @process.alive?
       end
 
     private
