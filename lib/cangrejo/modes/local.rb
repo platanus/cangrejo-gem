@@ -23,7 +23,7 @@ module Cangrejo
       end
 
       def release
-        stop_process(@process) if !@process.nil? && @process.alive?
+        stop_process(@process) unless @process.nil?
       end
 
     private
@@ -62,7 +62,7 @@ module Cangrejo
       end
 
       def stop_process(_process)
-        _process.stop
+        _process.stop if @process.alive?
       end
 
       def wait_for_socket
